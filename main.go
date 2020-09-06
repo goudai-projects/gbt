@@ -16,31 +16,9 @@ limitations under the License.
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/goudai-projects/gd-build-tools/cmd"
-	"os/exec"
 )
 
 func main() {
-
-	//Test(exec.Command("mvn", "com.google.cloud.tools:jib-maven-plugin:build"))
-
-	//cmds := exec.Command("mvn","-v")
-
 	cmd.Execute()
-}
-
-func Test(cmds *exec.Cmd) {
-	var out bytes.Buffer
-	var stderr bytes.Buffer
-	cmds.Stdout = &out
-	cmds.Stderr = &stderr
-	err := cmds.Run()
-
-	if err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
-		return
-	}
-	fmt.Println("Result: " + out.String())
 }

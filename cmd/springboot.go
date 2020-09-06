@@ -19,9 +19,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"log"
 	"os/exec"
-	"strings"
 )
 
 var defaultJreImage = "registry.cn-shanghai.aliyuncs.com/qingmuio/oprenjre:11.0.7"
@@ -51,7 +49,7 @@ var springbootCmd = &cobra.Command{
 		}
 		cmds = append(cmds, fmt.Sprintf("-Djib.from.image=%v", f))
 		cmds = append(cmds, fmt.Sprintf("-Dimage=%v", i))
-		log.Println("mvn " + strings.Join(cmds, " "))
+		//log.Println("mvn " + strings.Join(cmds, " "))
 		ExecLocalCmd(exec.Command("mvn", cmds...))
 	},
 }
