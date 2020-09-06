@@ -1,4 +1,4 @@
-module github.com/goudai-projects/gd-build-tools
+module github.com/goudai-projects/gbt
 
 go 1.15
 

@@ -16,7 +16,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/goudai-projects/gd-build-tools/cmd"
+	"github.com/goudai-projects/gbt/cmd"
 )
 
 func main() {

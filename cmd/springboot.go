@@ -31,7 +31,7 @@ var springbootCmd = &cobra.Command{
 	Long:  `Build a spring boot application to docker image`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmds := make([]string, 0)
-		cmds = append(cmds, "com.google.cloud.tools:jib-maven-plugin:build")
+		cmds = append(cmds, "clean", "package", "com.google.cloud.tools:jib-maven-plugin:build")
 		a := GetFlagValue(cmd, "active-maven-profile")
 		u := GetFlagValue(cmd, "username")
 		p := GetFlagValue(cmd, "password")
