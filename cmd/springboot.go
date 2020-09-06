@@ -24,6 +24,8 @@ import (
 	"strings"
 )
 
+var defaultJreImage = "registry.cn-shanghai.aliyuncs.com/qingmuio/oprenjre:11.0.7"
+
 // springbootCmd represents the springboot command
 var springbootCmd = &cobra.Command{
 	Use:   "springboot",
@@ -31,7 +33,6 @@ var springbootCmd = &cobra.Command{
 	Long:  `Build a spring boot application to docker image`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmds := make([]string, 0)
-		//cmds = append(cmds, "mvn")
 		cmds = append(cmds, "com.google.cloud.tools:jib-maven-plugin:build")
 		a := GetFlagValue(cmd, "active-maven-profile")
 		u := GetFlagValue(cmd, "username")
@@ -46,7 +47,7 @@ var springbootCmd = &cobra.Command{
 			cmds = append(cmds, fmt.Sprintf("-Djib.to.auth.password=%v", p))
 		}
 		if f == "" {
-			f = "freemanliu/oprenjre:11.0.5"
+			f = defaultJreImage
 		}
 		cmds = append(cmds, fmt.Sprintf("-Djib.from.image=%v", f))
 		cmds = append(cmds, fmt.Sprintf("-Dimage=%v", i))
@@ -60,7 +61,7 @@ func init() {
 	springbootCmd.Flags().StringP("active-maven-profile", "a", viper.GetString("PROFILE"), "active maven profile")
 	springbootCmd.Flags().StringP("username", "u", viper.GetString("DOCKER_USERNAME"), "docker username ")
 	springbootCmd.Flags().StringP("password", "p", viper.GetString("DOCKER_PASSWORD"), "docker passdowrd ")
-	springbootCmd.Flags().StringP("from-image", "f", "freemanliu/oprenjre:11.0.5", "docker base image  ")
+	springbootCmd.Flags().StringP("from-image", "f", defaultJreImage, "docker base image  ")
 	springbootCmd.Flags().StringP("image", "i", viper.GetString("IMAGE"), "docker out image ")
 	springbootCmd.MarkFlagRequired("image")
 }
