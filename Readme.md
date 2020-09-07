@@ -16,6 +16,18 @@ Exec `gbt build tomcat` in `Tomcat Project` project root dir.
 ./gbt build tomcat -h
 ```
 
+## Build Dubbo Projects
+Exec `gbt build tomcat` in `Tomcat Project` project root dir.
+```shell script
+./gbt build dubbo -h
+```
+
+## Build Golang Projects
+Exec `gbt build tomcat` in `Tomcat Project` project root dir.
+```shell script
+./gbt build go -h
+```
+
 
 
 
