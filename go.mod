@@ -2,7 +2,6 @@ module github.com/goudai-projects/gbt
 
 go 1.15
 
-
 require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/magiconair/properties v1.8.2 // indirect
@@ -16,5 +15,6 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	golang.org/x/sys v0.0.0-20200831180312-196b9ba8737a // indirect
+	golang.org/x/tools v0.0.0-20191112195655-aa38f8e97acc
 	gopkg.in/ini.v1 v1.60.2 // indirect
 )
