@@ -23,7 +23,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var defaultTomcatBaseImage = "tomcat:8.5-jre8-alpine"
+var defaultTomcatBaseImage = "registry.cn-shanghai.aliyuncs.com/qingmuio/tomcat:9.0.37"
 var defaultAppRoot = "/usr/local/tomcat/webapps/ROOT"
 
 // tomcatCmd represents the tomcat command
@@ -34,12 +34,12 @@ var tomcatCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cmds := make([]string, 0)
 		cmds = append(cmds, "clean", "package", "com.google.cloud.tools:jib-maven-plugin:build")
-		a := GetFlagValue(cmd, "active-maven-profile")
-		u := GetFlagValue(cmd, "username")
-		p := GetFlagValue(cmd, "password")
-		f := GetFlagValue(cmd, "from-image")
-		i := GetFlagValue(cmd, "image")
-		r := GetFlagValue(cmd, "app-root")
+		a := GetFlagValue(cmd, "active-maven-profile", viper.GetString("ACTIVE_MAVEN_PROFILE"))
+		u := GetFlagValue(cmd, "username", viper.GetString("DOCKER_USERNAME"))
+		p := GetFlagValue(cmd, "password", viper.GetString("DOCKER_PASSOWRD"))
+		f := GetFlagValue(cmd, "from-image", viper.GetString("FROM_IMAGE"))
+		i := GetFlagValue(cmd, "image", viper.GetString("IMAGE"))
+		r := GetFlagValue(cmd, "app-root", viper.GetString("APP_ROOT"))
 		if a != "" {
 			cmds = append(cmds, fmt.Sprintf("-P %v", a))
 		}
@@ -48,7 +48,7 @@ var tomcatCmd = &cobra.Command{
 			cmds = append(cmds, fmt.Sprintf("-Djib.to.auth.password=%v", p))
 		}
 		if f == "" {
-			f = defaultJreImage
+			f = defaultTomcatBaseImage
 		}
 		cmds = append(cmds, fmt.Sprintf("-Djib.from.image=%v", f))
 		cmds = append(cmds, fmt.Sprintf("-Dimage=%v", i))
@@ -56,7 +56,6 @@ var tomcatCmd = &cobra.Command{
 			r = defaultAppRoot
 		}
 		cmds = append(cmds, fmt.Sprintf("-Djib.container.appRoot=%v", r))
-		//log.Println("mvn " + strings.Join(cmds, " "))
 		ExecLocalCmd(exec.Command("mvn", cmds...))
 	},
 }

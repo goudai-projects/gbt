@@ -92,3 +92,4 @@ fabric.properties
 # vendor/
 
 test.sh
+test-dubbo.sh

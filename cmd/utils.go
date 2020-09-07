@@ -9,12 +9,23 @@ import (
 	"os/exec"
 )
 
-func GetFlagValue(cmd *cobra.Command, arg string) string {
+//func GetFlagValue(cmd *cobra.Command, arg string) string {
+//	v, err := cmd.Flags().GetString(arg)
+//	if err != nil {
+//		panic(err.Error())
+//	}
+//	return v
+//}
+
+func GetFlagValue(cmd *cobra.Command, arg string, defValue string) string {
 	v, err := cmd.Flags().GetString(arg)
 	if err != nil {
 		panic(err.Error())
 	}
-	return v
+	if v != "" {
+		return v
+	}
+	return defValue
 }
 
 func ExecLocalCmd(c *exec.Cmd) {

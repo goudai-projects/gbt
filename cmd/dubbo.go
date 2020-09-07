@@ -17,18 +17,19 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"log"
 	"os/exec"
+	"strings"
+
+	"github.com/spf13/cobra"
 )
 
-var defaultJreImage = "registry.cn-shanghai.aliyuncs.com/qingmuio/openjre:latest"
-
-// springbootCmd represents the springboot command
-var springbootCmd = &cobra.Command{
-	Use:   "springboot",
-	Short: "Build a spring boot application to docker image ",
-	Long:  `Build a spring boot application to docker image`,
+// dubboCmd represents the dubbo command
+var dubboCmd = &cobra.Command{
+	Use:   "dubbo",
+	Short: "Build multi-module dubbo project to docker image",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmds := make([]string, 0)
 		cmds = append(cmds, "clean", "package", "com.google.cloud.tools:jib-maven-plugin:build")
@@ -37,8 +38,13 @@ var springbootCmd = &cobra.Command{
 		p := GetFlagValue(cmd, "password", viper.GetString("DOCKER_PASSOWRD"))
 		f := GetFlagValue(cmd, "from-image", viper.GetString("FROM_IMAGE"))
 		i := GetFlagValue(cmd, "image", viper.GetString("IMAGE"))
+		m := GetFlagValue(cmd, "module-name", viper.GetString("MODULE_NAME"))
+		if m == "" {
+			log.Panic("dubbo project module name cannot be null")
+			return
+		}
 		if a != "" {
-			cmds = append(cmds, fmt.Sprintf("-P %v", a))
+			cmds = append(cmds, fmt.Sprintf("-P%v", a))
 		}
 		if u != "" && p != "" {
 			cmds = append(cmds, fmt.Sprintf("-Djib.to.auth.username=%v", u))
@@ -49,17 +55,21 @@ var springbootCmd = &cobra.Command{
 		}
 		cmds = append(cmds, fmt.Sprintf("-Djib.from.image=%v", f))
 		cmds = append(cmds, fmt.Sprintf("-Dimage=%v", i))
-
+		cmds = append(cmds, "-pl")
+		cmds = append(cmds, m)
+		cmds = append(cmds, "-am")
+		log.Println(strings.Join(cmds, " "))
 		ExecLocalCmd(exec.Command("mvn", cmds...))
 	},
 }
 
 func init() {
-	buildCmd.AddCommand(springbootCmd)
-	springbootCmd.Flags().StringP("active-maven-profile", "a", viper.GetString("PROFILE"), "active maven profile")
-	springbootCmd.Flags().StringP("username", "u", viper.GetString("DOCKER_USERNAME"), "docker username ")
-	springbootCmd.Flags().StringP("password", "p", viper.GetString("DOCKER_PASSWORD"), "docker passdowrd ")
-	springbootCmd.Flags().StringP("from-image", "f", defaultJreImage, "docker base image  ")
-	springbootCmd.Flags().StringP("image", "i", viper.GetString("IMAGE"), "docker out image ")
-	springbootCmd.MarkFlagRequired("image")
+	buildCmd.AddCommand(dubboCmd)
+	dubboCmd.Flags().StringP("active-maven-profile", "a", viper.GetString("PROFILE"), "active maven profile")
+	dubboCmd.Flags().StringP("username", "u", viper.GetString("DOCKER_USERNAME"), "docker username ")
+	dubboCmd.Flags().StringP("password", "p", viper.GetString("DOCKER_PASSWORD"), "docker passdowrd ")
+	dubboCmd.Flags().StringP("from-image", "f", defaultJreImage, "docker base image  ")
+	dubboCmd.Flags().StringP("image", "i", viper.GetString("IMAGE"), "docker out image ")
+	dubboCmd.Flags().StringP("module-name", "m", defaultAppRoot, "dubbo module name")
+	dubboCmd.MarkFlagRequired("image")
 }
